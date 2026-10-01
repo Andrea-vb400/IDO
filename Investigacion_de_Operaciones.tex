@@ -1,0 +1,198 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{geometry}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\geometry{margin=2.2cm}
+\setlength{\parskip}{5pt}
+\setlength{\parindent}{0pt}
+
+\title{Investigación de Operaciones}
+\author{Andrea Vargas Blas \\ Jimena Ortiz Rivas}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Programación lineal}
+
+Un modelo de programación lineal es una manera disciplinada de responder 3 preguntas:
+\begin{enumerate}
+    \item ¿Qué se puede decidir?
+    \item ¿Qué se quiere lograr con esa decisión?
+    \item ¿Qué límites no se pueden cruzar?
+\end{enumerate}
+
+\subsection{Procedimiento para aplicar a problemas de asignación de recursos}
+\begin{itemize}
+    \item Describa qué decisión se debe tomar y qué unidades se utilizarán.
+    \item Defina una variable por cada decisión desconocida.
+    \item Escriba la función objetivo: maximizar beneficio o minimizar costo.
+    \item Convierta cada límite de recursos, demanda o producción en una restricción.
+    \item Añada las condiciones de no negatividad.
+    \item Revise dimensiones, unidades y el significado de cada resultado.
+\end{itemize}
+
+Con esos pasos, un modelo lineal siempre puede escribirse en la misma forma general:
+\[
+\text{optimizar } Z=c_1x_1+\cdots+c_nx_n
+\]
+sujeto a restricciones lineales y a \(x_i\geq 0\).
+
+Como clave, es \emph{lineal}, que significa que cada variable aparece únicamente multiplicada por una constante y elevada a la primera potencia, sin productos entre variables ni exponentes distintos de uno.
+
+\section{Matrices}
+
+Las matrices son una buena herramienta para organizar y guardar información, como coeficientes, variables y términos independientes, como estructuras compactas que pueden operarse de manera mecánica.
+
+Una matriz \(A\) de tamaño \(m\times n\) tiene \(m\) filas y \(n\) columnas. Antes de calcular, anote siempre ese tamaño, porque de él depende qué operaciones son válidas:
+\[
+A=(a_{ij})_{m\times n}.
+\]
+
+La suma y la resta se hacen entrada por entrada y exigen matrices del mismo tamaño; no tiene sentido sumar una matriz de \(2\times3\) con una de \(3\times2\). El producto \(AB\), en cambio, no requiere que las matrices sean del mismo tamaño, sino que el número de columnas de \(A\) coincida con el número de filas de \(B\): si \(A\) es \(m\times n\) y \(B\) es \(n\times p\), entonces \(AB\) es \(m\times p\).
+
+La transpuesta intercambia filas y columnas: \(A^T\) es \(n\times m\). Una potencia \(A^k\) sólo tiene sentido si \(A\) es cuadrada, pues de otro modo el producto \(AA\) no estaría definido.
+
+\subsection{Construcción de matrices a partir de una fórmula}
+Con frecuencia el enunciado de un ejercicio no da la matriz completa, sino una fórmula para su entrada genérica \(a_{ij}\). En ese caso conviene proceder con orden en lugar de calcular entradas al azar:
+\begin{enumerate}
+    \item Fije el tamaño.
+    \item Sustituya \(i=1\) y recorra \(j=1,2,\ldots,n\) para formar la primera fila.
+    \item Repita con \(i=2,\ldots,m\).
+    \item Compruebe que cada entrada ocupa la posición correcta.
+\end{enumerate}
+
+Por ejemplo, para una entrada definida por una fórmula \(a_{ij}\), primero se calcula el numerador (que depende de ambos índices) y después se divide entre el denominador indicado; hacerlo en ese orden evita errores de aritmética.
+
+Considere el sistema:
+\[
+\begin{aligned}
+a_{11}x_1+\cdots+a_{1n}x_n&=b_1,\\
+&\vdots\\
+a_{m1}x_1+\cdots+a_{mn}x_n&=b_m.
+\end{aligned}
+\]
+
+En lugar de arrastrar \(m\) ecuaciones completas, basta con separar tres piezas de información: la matriz de coeficientes, que contiene sólo los números que multiplican a las incógnitas; el vector de incógnitas; y el vector de términos independientes:
+\[
+A=\begin{pmatrix}
+a_{11}&\cdots&a_{1n}\\
+\vdots&\ddots&\vdots\\
+a_{m1}&\cdots&a_{mn}
+\end{pmatrix},
+\quad
+X=\begin{pmatrix}x_1\\ \vdots\\x_n\end{pmatrix},
+\quad
+B=\begin{pmatrix}b_1\\ \vdots\\b_m\end{pmatrix}.
+\]
+Así, el sistema completo se resume en una sola expresión:
+\[
+AX=B.
+\]
+
+\section{Ejemplo considerando las dos habilidades anteriores}
+
+Sean \(A=(a_{ij})_{m\times n}\), \(B=(b_{ij})_{n\times p}\) y \(C=(c_{ij})_{r\times s}\), con dimensiones compatibles según la operación.
+
+\begin{enumerate}
+    \item Elija tamaños compatibles y construya ejemplos para \(A-\frac{2}{3}B\), \(ABC\), \(CBA\) y \(A^T(BC)^T\).
+    \item Explique por qué \(A^2+2B+C^2\) requiere que los términos sumados tengan el mismo tamaño y que \(A,C\) sean cuadradas.
+    \item Una matriz es antisimétrica si \(A^T=-A\). Construya una matriz antisimétrica \(3\times3\) no diagonal y simplifique \((AA^T-A)^T\).
+\end{enumerate}
+
+\section{Programación lineal y método simplex}
+
+Un modelo de programación lineal, tal como se plantea de forma natural, mezcla desigualdades de distinto tipo: algunas restricciones dicen ``a lo más'', otras ``al menos'' y otras piden una igualdad exacta. El método simplex, sin embargo, sólo sabe trabajar con igualdades, es decir, todas las variables deben aparecer en todas las filas y todas las variables ser positivas.
+
+\begin{itemize}
+    \item En una restricción \(a^Tx\leq b\) se suma holgura \(s\geq0\):
+    \[
+    a^Tx+s=b.
+    \]
+    \item En una restricción \(a^Tx\geq b\) se resta exceso \(e\geq0\):
+    \[
+    a^Tx-e=b.
+    \]
+    \item Una igualdad o una restricción \(\geq\) puede necesitar una artificial \(a\geq0\) para formar la base inicial.
+\end{itemize}
+
+\subsection{Cómo leer una tabla simplex}
+
+Las columnas \(x_1,x_2,\ldots\) contienen los coeficientes de las variables; la columna \(b\) contiene los términos independientes; \(C_B\) es el coeficiente de la variable básica en la función objetivo y la columna ``Base'' indica qué variable está actualmente en la base.
+
+\begin{itemize}
+    \item Para maximizar, entra la variable con el mayor \(C_j-Z_j>0\) y se detiene cuando todos los costos reducidos son \(\leq0\).
+    \item Para minimizar, entra la variable con el \(C_j-Z_j\) más negativo y se detiene cuando todos los costos reducidos son \(\geq0\).
+\end{itemize}
+
+La razón \(\theta=b_i/a_{ik}\) sólo se calcula cuando el coeficiente de la columna entrante es estrictamente positivo. La menor razón no negativa determina la variable que sale de la base.
+
+\section{Ejemplo de minimización con artificiales: método de la gran M}
+
+Considere el problema de minimización:
+\[
+\min C=6x_1+8x_2
+\]
+sujeto a:
+\[
+\begin{aligned}
+x_1+x_2&=5000,\\
+x_1&\leq1500,\\
+x_2&\geq750,\\
+x_1,x_2&\geq0.
+\end{aligned}
+\]
+
+\subsection*{Paso 0: pasar todas las restricciones a igualdades}
+\[
+\begin{aligned}
+x_1+x_2+a_1&=5000,\\
+x_1+s_1&=1500,\\
+x_2-e_2+a_2&=750.
+\end{aligned}
+\]
+
+Función objetivo penalizada:
+\[
+\min C=6x_1+8x_2+Ma_1+Ma_2,
+\]
+donde \(M\) se considera suficientemente grande.
+
+\textit{Nota:} Las tablas simplex manuscritas del documento contienen cifras y anotaciones pequeñas. Se conserva aquí el planteamiento legible; conviene cotejar los valores de cada iteración con la imagen original antes de utilizarlos como resultados definitivos.
+
+\section{Comprobación final}
+
+\begin{enumerate}
+    \item Sustituya la solución en todas las restricciones originales.
+    \item Verifique no negatividad y unidades.
+    \item Recalcule la función objetivo directamente.
+    \item Explique qué recursos sobran y cuáles se agotan.
+    \item Distinga entre óptimo, múltiples óptimos, no factibilidad y no acotación.
+\end{enumerate}
+
+\section{Conceptos}
+
+\textbf{Óptimos múltiples.} Una variable no básica con índice cero puede entrar sin cambiar el valor de \(Z\), lo que revela que existe más de una combinación de variables que alcanza el mismo óptimo.
+
+\textbf{Degeneración.} Dos razones mínimas iguales pueden producir una base con término independiente cero; se requiere cuidado para no repetir bases y caer en un ciclo sin avanzar.
+
+\textbf{No factibilidad.} Una artificial positiva al finalizar indica que las restricciones originales no pueden satisfacerse simultáneamente, sin importar qué valores tomen las variables de decisión.
+
+\textbf{No acotación.} Si la columna entrante no tiene coeficientes positivos, la variable puede crecer indefinidamente sin violar ninguna restricción, y el objetivo no tiene un máximo (o mínimo) finito.
+
+\subsection*{Situaciones y términos}
+\begin{description}[leftmargin=3.2cm,style=nextline]
+    \item[Variable básica.] Variable que forma parte de la solución actual y aparece como columna unidad.
+    \item[Variable no básica.] Variable fijada en cero en la solución actual.
+    \item[Columna pivote.] Columna de la variable que entrará a la base.
+    \item[Fila pivote.] Fila seleccionada por la razón mínima.
+    \item[Precio sombra.] Cambio marginal en el objetivo al disponer de una unidad adicional de un recurso, mientras se mantenga la misma base.
+    \item[Mezcla de solución.] Valores conjuntos de las variables de decisión.
+\end{description}
+
+\end{document}
